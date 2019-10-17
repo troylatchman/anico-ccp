@@ -1,36 +1,25 @@
 <template>
-  <v-app>
-    <v-app-bar app>
-      <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn
-        text
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-      >
-        <span class="mr-2">Latest Release</span>
-      </v-btn>
-    </v-app-bar>
-
+  <v-app id="ccp-app">
+    <AppBar />
+    <NavigationDrawer />
     <v-content>
-      <HelloWorld />
+      <v-container fluid>
+        <keep-alive :max="50">
+          <router-view></router-view>
+        </keep-alive>
+      </v-container>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
+import AppBar from "@/components/AppBar";
+import NavigationDrawer from "@/components/NavigationDrawer";
 
 export default {
-  name: "App",
   components: {
-    HelloWorld
-  },
-  data: () => ({
-    //
-  })
+    AppBar,
+    NavigationDrawer
+  }
 };
 </script>
