@@ -13,8 +13,10 @@ const actions = {
     commit("setOnCall", true);
     router.push("/search");
   },
-  endCall({ commit }) {
+  endCall({ commit, dispatch }) {
     commit("setOnCall", false);
+    dispatch("books/clearBooks", undefined, { root: true });
+    dispatch("navigation/resetCallLinks", undefined, { root: true });
     router.push("/").catch(() => {});
   }
 };

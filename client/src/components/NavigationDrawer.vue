@@ -34,7 +34,7 @@
 
 <script>
 // import PersistentInfo from "@/views/PersistentInfo.vue";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   computed: {
@@ -47,16 +47,7 @@ export default {
       }
     },
     ...mapState("cti", ["onCall"]),
-    onCall() {
-      if (!this.$store.state.cti.onCall) {
-        this.resetCallLinks();
-      }
-      return this.$store.state.cti.onCall;
-    },
     ...mapState("navigation", ["links", "callLinks"])
-  },
-  methods: {
-    ...mapActions("navigation", ["resetCallLinks"])
   }
 };
 </script>

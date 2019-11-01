@@ -4,8 +4,12 @@
     <NavigationDrawer />
     <v-content>
       <v-container fluid>
+        <!-- There are caveats to using keep-alive, like using the "activated" hook  -->
         <keep-alive :max="50">
           <router-view></router-view>
+          <!-- <router-view :key="$route.fullPath"></router-view> -->
+          <!-- The above line seems to break hot reloading of pages -->
+          <!-- Solution: have the resolved views "watch" the dynamic portion of the URL -->
         </keep-alive>
       </v-container>
     </v-content>

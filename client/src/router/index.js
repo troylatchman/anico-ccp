@@ -35,7 +35,11 @@ const routes = [
     path: "/life-policy/:id",
     name: "life-policy",
     component: LifePolicy,
-    props: true,
+    props(route) {
+      return {
+        id: Number(route.params.id)
+      };
+    },
     beforeEnter(routeTo, routeFrom, next) {
       if (store.state.cti.onCall) next();
       else next(false);
