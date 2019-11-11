@@ -1,20 +1,24 @@
 import { Injectable, HttpService, HttpException } from '@nestjs/common';
 import { PolicyLookupDTO } from './dto/policy-lookup.dto';
+import { ConfigService } from '../config/config.service';
 
 @Injectable()
 export class PolicyService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly config: ConfigService,
+    private readonly httpService: HttpService,
+  ) {}
 
   async billing(policyLookupDTO: PolicyLookupDTO) {
     try {
       const axiosResponse = await this.httpService
         .post(
-          'https://apidev.americannational.com/american-national-dev/dev/billingapi/billinggetdata',
+          `${this.config.eccsBaseUrl}/billingapi/billinggetdata`,
           policyLookupDTO,
           {
             headers: {
-              authorization: 'Basic QU5DQ1BEOlBycGxhbjE5',
-              'x-ibm-client-id': '8965372f-bedb-4d91-8732-2d1e49133e2a',
+              authorization: this.config.eccsAuthorizationHeader,
+              'x-ibm-client-id': this.config.eccsIbmClientId,
             },
           },
         )
