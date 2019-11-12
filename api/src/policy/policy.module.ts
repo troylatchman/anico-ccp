@@ -1,7 +1,6 @@
 import { Module, HttpModule } from '@nestjs/common';
 import { PolicyController } from './policy.controller';
 import { PolicyService } from './policy.service';
-import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 
 @Module({
@@ -9,7 +8,6 @@ import { ConfigService } from '../config/config.service';
   providers: [PolicyService],
   imports: [
     HttpModule.registerAsync({
-      imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
         headers: {
           authorization: config.eccsAuthorizationHeader,
@@ -19,7 +17,6 @@ import { ConfigService } from '../config/config.service';
       }),
       inject: [ConfigService],
     }),
-    ConfigModule,
   ],
 })
 export class PolicyModule {}
