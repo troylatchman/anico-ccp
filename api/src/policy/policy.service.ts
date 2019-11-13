@@ -1,7 +1,9 @@
 import { Injectable, HttpService, HttpException } from '@nestjs/common';
 import { PolicyLookupDTO } from './dto/policy-lookup.dto';
 import { ConfigService } from '../config/config.service';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+import { EccsBillingResponse } from './types/eccs-response/get-billing';
+import { GetBillingDTO } from './dto/response/get-billing.dto';
 
 @Injectable()
 export class PolicyService {
@@ -19,10 +21,13 @@ export class PolicyService {
 
   async billing(policyLookupDTO: PolicyLookupDTO) {
     try {
-      const axiosResponse = await this.httpService
+      const axiosResponse: AxiosResponse<
+        EccsBillingResponse
+      > = await this.httpService
         .post('/billingapi/billinggetdata', policyLookupDTO)
         .toPromise();
-      return axiosResponse.data;
+      const eccsData = axiosResponse.data;
+      return new GetBillingDTO(eccsData);
     } catch (error) {
       this.handleAxiosError(error);
     }
