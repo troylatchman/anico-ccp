@@ -1,7 +1,16 @@
-import { Module, HttpModule } from '@nestjs/common';
+import {
+  Module,
+  HttpModule,
+  OnModuleInit,
+  HttpService,
+  Inject,
+} from '@nestjs/common';
 import { PolicyController } from './policy.controller';
 import { PolicyService } from './policy.service';
 import { ConfigService } from '../config/config.service';
+import { LoggerModule, Loggers } from '../logger/logger.module';
+import { setupAxiosLogging } from '../logger/axios.logging.interceptor';
+import { Logger } from 'winston';
 
 @Module({
   controllers: [PolicyController],
@@ -17,6 +26,16 @@ import { ConfigService } from '../config/config.service';
       }),
       inject: [ConfigService],
     }),
+    LoggerModule,
   ],
 })
-export class PolicyModule {}
+export class PolicyModule implements OnModuleInit {
+  constructor(
+    private readonly httpService: HttpService,
+    @Inject(Loggers.eccs) private readonly eccsLogger: Logger,
+  ) {}
+
+  onModuleInit() {
+    setupAxiosLogging(this.httpService, this.eccsLogger);
+  }
+}
