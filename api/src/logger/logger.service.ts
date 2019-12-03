@@ -6,10 +6,11 @@ import 'winston-daily-rotate-file';
 @Injectable()
 export class LoggerService {
   ccpLogger: winston.Logger;
+  ccpExceptionLogger: winston.Logger;
   eccsLogger: winston.Logger;
 
   constructor() {
-    this.ccpLogger = winston.loggers.add('ccp', {
+    this.ccpLogger = winston.loggers.add('ccp-logger', {
       format: this.logFormat,
       level: 'debug',
       transports: [
@@ -21,7 +22,19 @@ export class LoggerService {
       ],
     });
 
-    this.eccsLogger = winston.loggers.add('eccs', {
+    this.ccpExceptionLogger = winston.loggers.add('ccp-exception-logger', {
+      format: this.logFormat,
+      level: 'error',
+      transports: [
+        // @ts-ignore
+        new winston.transports.DailyRotateFile({
+          ...this.dailyRotateTransportOptions,
+          filename: 'ccp-exception-%DATE%.log',
+        }),
+      ],
+    });
+
+    this.eccsLogger = winston.loggers.add('eccs-logger', {
       format: this.logFormat,
       level: 'debug',
       transports: [

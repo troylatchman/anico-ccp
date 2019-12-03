@@ -1,11 +1,12 @@
 import { Injectable, HttpService, HttpException, Inject } from '@nestjs/common';
 import { PolicyLookupDTO } from './dto/policy-lookup.dto';
 import { ConfigService } from '../config/config.service';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import { EccsBillingResponse } from './types/eccs-response/get-billing';
 import { GetBillingDTO } from './dto/response/get-billing.dto';
 import { Logger } from 'winston';
 import { Loggers } from '../logger/logger.module';
+import { handleServiceError } from '../exception/exception.utils';
 
 @Injectable()
 export class PolicyService {
@@ -16,15 +17,14 @@ export class PolicyService {
     @Inject(Loggers.eccs) private readonly eccsLogger: Logger,
   ) {}
 
-  handleAxiosError(error: AxiosError) {
-    if (error.response) {
-      throw new HttpException(error.response.data, error.response.status);
-    }
-    throw error;
-  }
-
   async billing(policyLookupDTO: PolicyLookupDTO) {
     try {
+      // throw 5;
+      // throw null;
+      // throw undefined;
+      // throw Symbol('hi');
+      // throw new HttpException({ a: 5, b: 6 }, 500);
+      // throw new Error('some error message');
       const axiosResponse: AxiosResponse<
         EccsBillingResponse
       > = await this.httpService
@@ -33,7 +33,7 @@ export class PolicyService {
       const eccsData = axiosResponse.data;
       return new GetBillingDTO(eccsData);
     } catch (error) {
-      this.handleAxiosError(error);
+      handleServiceError(error);
     }
   }
 }

@@ -1,11 +1,12 @@
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { LoggerService } from './logger.service';
 
 export enum Loggers {
   ccp = 'ccp',
+  ccpException = 'ccp-exception',
   eccs = 'eccs',
 }
-
+@Global()
 @Module({
   providers: [
     LoggerService,
@@ -17,6 +18,13 @@ export enum Loggers {
       inject: [LoggerService],
     },
     {
+      provide: Loggers.ccpException,
+      useFactory: (loggerService: LoggerService) => {
+        return loggerService.ccpExceptionLogger;
+      },
+      inject: [LoggerService],
+    },
+    {
       provide: Loggers.eccs,
       useFactory: (loggerService: LoggerService) => {
         return loggerService.eccsLogger;
@@ -24,6 +32,6 @@ export enum Loggers {
       inject: [LoggerService],
     },
   ],
-  exports: [Loggers.ccp, Loggers.eccs],
+  exports: [Loggers.ccp, Loggers.ccpException, Loggers.eccs],
 })
 export class LoggerModule {}

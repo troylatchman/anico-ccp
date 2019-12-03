@@ -7,9 +7,16 @@ import { ConfigModule } from './config/config.module';
 import { LoggerModule } from './logger/logger.module';
 import { ResponseLoggingMiddleware } from './logger/response.logging.middleware';
 import { PolicyController } from './policy/policy.controller';
+import { ExceptionModule } from './exception/exception.module';
 
 @Module({
-  imports: [BooksModule, PolicyModule, ConfigModule, LoggerModule],
+  imports: [
+    BooksModule,
+    PolicyModule,
+    ConfigModule,
+    LoggerModule,
+    ExceptionModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -43,10 +43,15 @@ export function setupAxiosLogging(httpService: HttpService, logger: Logger) {
   );
 
   function parseResponse(response: AxiosResponse) {
-    const elapsedMilliseconds = Date.now() - response.config.startMilliseconds;
-    const summary = `${response.config.method.toUpperCase()} ${
-      response.config.url
-    } ${response.status} ${elapsedMilliseconds}`;
+    let elapsedMilliseconds: string | number = 'unknown time';
+    if (response.config.startMilliseconds) {
+      elapsedMilliseconds = Date.now() - response.config.startMilliseconds;
+    }
+    const summary = `${(
+      response.config.method || 'unknown method'
+    ).toUpperCase()} ${response.config.url} ${
+      response.status
+    } ${elapsedMilliseconds}`;
     const requestDetails = JSON.stringify({
       requestDetails: {
         headers: response.config.headers,
@@ -67,22 +72,31 @@ export function setupAxiosLogging(httpService: HttpService, logger: Logger) {
   }
 
   function parseError(error: AxiosError) {
-    const elapsedMilliseconds = Date.now() - error.config.startMilliseconds;
-    const summary = `${error.config.method.toUpperCase()} ${error.config.url} ${
-      error.response.status
-    } ${elapsedMilliseconds}`;
-    const requestDetails = JSON.stringify({
-      requestDetails: {
-        headers: error.config.headers,
-        body: JSON.parse(error.config.data),
-      },
-    });
-    const errorDetails = JSON.stringify({
-      responseDetails: {
-        headers: error.response.headers,
-        body: error.response.data,
-      },
-    });
+    let elapsedMilliseconds: string | number = 'unknown time';
+    let summary = 'unknown summary';
+    let requestDetails = 'unknown request details';
+    let errorDetails = 'unknown response details';
+
+    if (error.response) {
+      if (error.config.startMilliseconds) {
+        elapsedMilliseconds = Date.now() - error.config.startMilliseconds;
+      }
+      summary = `${(error.config.method || 'unknown method').toUpperCase()} ${
+        error.config.url
+      } ${error.response.status} ${elapsedMilliseconds}`;
+      requestDetails = JSON.stringify({
+        requestDetails: {
+          headers: error.config.headers,
+          body: JSON.parse(error.config.data),
+        },
+      });
+      errorDetails = JSON.stringify({
+        responseDetails: {
+          headers: error.response.headers,
+          body: error.response.data,
+        },
+      });
+    }
     return {
       summary,
       requestDetails,

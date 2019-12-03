@@ -8,7 +8,7 @@ import {
 import { PolicyController } from './policy.controller';
 import { PolicyService } from './policy.service';
 import { ConfigService } from '../config/config.service';
-import { LoggerModule, Loggers } from '../logger/logger.module';
+import { Loggers } from '../logger/logger.module';
 import { setupAxiosLogging } from '../logger/axios.logging.interceptor';
 import { Logger } from 'winston';
 
@@ -26,7 +26,6 @@ import { Logger } from 'winston';
       }),
       inject: [ConfigService],
     }),
-    LoggerModule,
   ],
 })
 export class PolicyModule implements OnModuleInit {
