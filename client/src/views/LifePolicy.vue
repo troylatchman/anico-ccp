@@ -30,15 +30,9 @@ export default {
       fetchError: undefined
     };
   },
-  activated() {
-    console.log("activated id:" + this.id);
+  created: function() {
+    console.log("created id:" + this.id);
     this.fetchData();
-  },
-  watch: {
-    id() {
-      console.log("watch id:" + this.id);
-      this.fetchData();
-    }
   },
   computed: {
     book() {

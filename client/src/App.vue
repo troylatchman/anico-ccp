@@ -4,12 +4,11 @@
     <NavigationDrawer />
     <v-content>
       <v-container fluid>
-        <!-- There are caveats to using keep-alive, like using the "activated" hook  -->
+        <!-- There is an issue in vue-loader when using keep-alive  -->
+        <!-- Comment the beginning and end tags during development to keep HMR functioning -->
+        <!-- For more details: https://github.com/vuejs/vue-loader/issues/1332 -->
         <keep-alive :max="50">
-          <router-view></router-view>
-          <!-- <router-view :key="$route.fullPath"></router-view> -->
-          <!-- The above line seems to break hot reloading of pages -->
-          <!-- Solution: have the resolved views "watch" the dynamic portion of the URL -->
+          <router-view :key="$route.fullPath"></router-view>
         </keep-alive>
       </v-container>
     </v-content>
