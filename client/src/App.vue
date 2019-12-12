@@ -5,11 +5,17 @@
     <v-content>
       <v-container fluid>
         <!-- There is an issue in vue-loader when using keep-alive  -->
-        <!-- Comment the beginning and end tags during development to keep HMR functioning -->
         <!-- For more details: https://github.com/vuejs/vue-loader/issues/1332 -->
-        <keep-alive :max="50">
+        <!-- Disabling keep-alive (destory inactive components) will ensure HMR works, which can speed up development -->
+        <!-- Ensure that keep-alive is enabled for builds being promoted to any environment-->
+        <template v-if="keepAlive">
+          <keep-alive :max="50">
+            <router-view :key="$route.fullPath"></router-view>
+          </keep-alive>
+        </template>
+        <template v-else>
           <router-view :key="$route.fullPath"></router-view>
-        </keep-alive>
+        </template>
       </v-container>
     </v-content>
   </v-app>
@@ -23,6 +29,17 @@ export default {
   components: {
     AppBar,
     NavigationDrawer
+  },
+  data() {
+    return {
+      inactiveComponentLifeCycle:
+        process.env.VUE_APP_INACTIVE_ROUTER_VIEW_LIFE_CYCLE
+    };
+  },
+  computed: {
+    keepAlive() {
+      return this.inactiveComponentLifeCycle !== "destroy";
+    }
   }
 };
 </script>
