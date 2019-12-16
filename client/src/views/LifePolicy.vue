@@ -30,8 +30,9 @@ export default {
       fetchError: undefined
     };
   },
-  created: function() {
+  created: async function() {
     console.log("created id:" + this.id);
+    console.log(`Environment: ${await this.getEnvironment()}`);
     this.fetchData();
   },
   computed: {
@@ -62,7 +63,8 @@ export default {
         this.fetching = false;
       }
     },
-    ...mapActions("books", ["fetchBook"])
+    ...mapActions("books", ["fetchBook"]),
+    ...mapActions(["getEnvironment"])
   }
 };
 </script>

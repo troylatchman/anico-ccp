@@ -12,7 +12,25 @@ export default new Vuex.Store({
     navigation,
     books
   },
-  state: {},
-  mutations: {},
-  actions: {}
+  state: {
+    environment: undefined
+  },
+  actions: {
+    async getEnvironment({ commit, state }) {
+      if (state.environment) {
+        return state.environment;
+      } else {
+        // potentially fetch environment from API
+        // for now, we have a special variable
+        const env = process.env.VUE_APP_ANICO_ENV;
+        commit("environment", env);
+        return env;
+      }
+    }
+  },
+  mutations: {
+    environment(state, env) {
+      state.environment = env;
+    }
+  }
 });
