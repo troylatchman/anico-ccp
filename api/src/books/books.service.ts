@@ -17,7 +17,7 @@ export class BooksService {
     return new Promise(resolve => {
       const book = this.books.find(currentBook => currentBook.id === id);
       if (!book) {
-        throw new HttpException('Book does not exist!', 404);
+        throw new HttpException({ message: 'Book does not exist!' }, 404);
       }
       resolve(book);
     });
