@@ -1,8 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "@/views/Home.vue";
+//import Home from "@/views/Home.vue";
+import Login from "@/views/Login.vue";
 import Search from "@/views/Search.vue";
 import LifePolicy from "@/views/LifePolicy.vue";
+import UAD from "@/views/UAD.vue";
 import store from "@/store";
 
 Vue.use(VueRouter);
@@ -10,8 +12,21 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: Home
+    component: Login,
+    props: true
+    /*beforeEnter: checkForChanges,*/
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: Login,
+    props: true
+  },
+  {
+    path: "/uad",
+    name: "uad",
+    component: UAD,
+    props: true
   },
   {
     path: "/about",
