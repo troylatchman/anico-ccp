@@ -2,13 +2,16 @@
   <v-app id="inspire">
     <v-content>
       <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center">
+        <v-row v-if="mode === 'login'" align="center" justify="center">
           <v-col cols="12" sm="8" md="4">
             <v-card class="elevation-12">
               <div class="title">
                 Welcome back, please sign in
               </div>
               <v-card-text>
+                <v-alert v-if="loginMessage.length > 0" type="error">{{
+                  loginMessage
+                }}</v-alert>
                 <v-form>
                   <v-text-field
                     type="text"
@@ -52,6 +55,37 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-row v-else align="center" justify="center">
+          <v-col cols="12" sm="8" md="4">
+            <v-card class="elevation-12">
+              <div class="title">
+                Reset Password
+              </div>
+              <v-card-text>
+                <v-form>
+                  <v-text-field
+                    type="text"
+                    placeholder="Enter Email associated with your account"
+                    v-model="resetEmail"
+                    autocomplete="off"
+                  />
+                </v-form>
+              </v-card-text>
+              <v-card-actions class="actions">
+                <v-btn
+                  block
+                  :disabled="resetEmail.length === 0"
+                  @click.prevent="requestReset()"
+                >
+                  Request Reset Password Link
+                </v-btn>
+                <div class="reset-password" @click.prevent="mode = 'login'">
+                  Return to Login
+                </div>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-container>
     </v-content>
   </v-app>
@@ -59,42 +93,69 @@
 
 <script lang="ts">
 import Vue from "vue";
+import authService from "../services/AuthService.js";
 import { mapState } from "vuex";
-//import store from "../store";
+// import store from "../store";
 
 export default Vue.extend({
+  components: {},
   props: {
     reset: { type: Boolean, default: false }
   },
   data() {
     return {
       title: "American National Insurance Co - CCP",
+      mode: "login",
       userId: "",
       password: "",
       agentId: "",
-      extension: ""
+      extension: "",
+      loginMessage: "",
+      resetEmail: ""
     };
   },
+  computed: {
+    formValid() {
+      return this.userId.length > 0 && this.password.length > 0;
+    },
+    ...mapState(["apiToken", "loginMsg"])
+  },
+  watch: {
+    userId() {
+      if (this.loginMessage.length > 0) {
+        this.loginMessage = "";
+      }
+    },
+    password() {
+      if (this.loginMessage.length > 0) {
+        this.loginMessage = "";
+      }
+    }
+  },
   methods: {
-    resetForm() {
-      this.$store.dispatch("clearLogin");
+    resetPassword() {
+      this.mode = "reset";
+    },
+    requestReset() {
+      // this.$store.dispatch("clearLogin");
       this.password = "";
     },
     authenticate() {
       const userId = this.userId;
       const password = this.password;
       console.log(userId, password);
-      this.$router.push({
-        name: "uad",
-        params: { userId: this.userId, token: this.token }
+      authService.authenticate(userId, password).then(res => {
+        if (res.data.status) {
+          this.$store.dispatch("setAPIToken", res.data.token);
+          this.$router.push({
+            name: "uad",
+            params: { userId: this.userId, token: this.token }
+          });
+        } else {
+          this.loginMessage = res.data.msg;
+        }
       });
     }
-  },
-  computed: {
-    formValid() {
-      return this.userId.length > 0 && this.password.length > 0;
-    },
-    ...mapState(["token", "loginMsg"])
   },
   mounted() {
     this.$store.state.userId = "Tracy"; //TODO: DEV ONLY!!!
@@ -120,5 +181,10 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+}
+
+v-btn {
+  cursor: pointer;
 }
 </style>
