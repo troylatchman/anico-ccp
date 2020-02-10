@@ -12,9 +12,16 @@ const apiClient = axios.create({
 export default class AuthService {
   static getPrivileges() {
     const apiToken = store.state.apiToken;
-    return apiClient.get(`/authorize/privileges`, {
-      headers: { Authorization: `Bearer ${apiToken}` }
-    });
+    return apiClient
+      .get(`/authorize/privileges`, {
+        headers: { Authorization: `Bearer ${apiToken}` }
+      })
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => {
+        return err;
+      });
   }
 
   static authenticate(userId, password) {
