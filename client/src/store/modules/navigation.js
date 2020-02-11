@@ -9,14 +9,15 @@ const defaultCallLinks = [
 const state = {
   navigationOpen: true,
   links: [
-    { title: "Home", icon: "mdi-home", url: "/" },
-    { title: "About", icon: "mdi-information", url: "/about" }
+    { title: "Home", icon: "mdi-home", url: "/uad/home" },
+    { title: "About", icon: "mdi-information", url: "/uad/about" },
+    { title: "Log Out", icon: "mdi-information", url: "/login" }
   ],
   callLinks: [
     {
       title: "Search",
       icon: "mdi-account-search",
-      url: "/search"
+      url: "/uad/search"
     }
   ]
 };

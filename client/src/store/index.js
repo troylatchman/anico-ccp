@@ -7,6 +7,14 @@ import authService from "../services/AuthService.js";
 
 Vue.use(Vuex);
 
+const parseJwt = token => {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch (e) {
+    return null;
+  }
+};
+
 export default new Vuex.Store({
   modules: {
     cti,
@@ -15,7 +23,10 @@ export default new Vuex.Store({
   },
   state: {
     environment: undefined,
-    apiToken: null
+    apiToken: null,
+    apiTokenPayload: "",
+    userName: "",
+    userRole: ""
   },
   actions: {
     async getEnvironment({ commit, state }) {
@@ -29,8 +40,12 @@ export default new Vuex.Store({
         return env;
       }
     },
-    setAPIToken({ commit }, token) {
+    setAPIToken({ commit, state }, token) {
       commit("SET_API_TOKEN", token);
+      const payload = parseJwt(token);
+      commit("SET_API_TOKEN_PAYLOAD", payload);
+      state.userName = payload.name;
+      state.userRole = payload.role;
       authService.getPrivileges().then(res => {
         console.log(res);
       });
@@ -42,6 +57,9 @@ export default new Vuex.Store({
     },
     SET_API_TOKEN(state, token) {
       state.apiToken = token;
+    },
+    SET_API_TOKEN_PAYLOAD(state, o) {
+      state.apiTokenPayload = o;
     }
   }
 });

@@ -36,7 +36,7 @@ export default class AuthService {
         oData.status = true;
         oData.msg = "";
         oData.token =
-          "https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRyYWN5IFNwcmF0dCIsInJvbGUiOiJTQ09fTElBX0NTUiAiLCJpYXQiOjE1MTYyMzkwMjJ9.2u7USxpMaIlhmdPw-JSRL7UFNU3oExXKe7r_U7iDd9E;";
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRyYWN5IFNwcmF0dCIsInJvbGUiOiJTQ09fTElBX0NTUiAiLCJpYXQiOjE1MTYyMzkwMjJ9.2u7USxpMaIlhmdPw-JSRL7UFNU3oExXKe7r_U7iDd9E;";
       }
       resolve({ data: oData });
     });

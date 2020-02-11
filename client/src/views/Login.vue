@@ -158,7 +158,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.$store.state.userId = "Tracy"; //TODO: DEV ONLY!!!
+    this.$store.state.apiToken = ""; //We do not want to invoke any action
   }
 });
 </script>
