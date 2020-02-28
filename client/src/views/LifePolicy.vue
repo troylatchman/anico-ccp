@@ -35,6 +35,11 @@ export default {
     console.log(`Environment: ${await this.getEnvironment()}`);
     this.fetchData();
   },
+  activated() {
+    // invoked if view is cached, should be similar/identical to created()
+    console.log("activated id:" + this.id);
+    this.fetchData();
+  },
   computed: {
     book() {
       return this.getBookById(this.id);
